@@ -26,6 +26,7 @@
     <ProjectReference Include="..\Infrastructure.Auth\Infrastructure.Auth.csproj" />
     <ProjectReference Include="..\Infrastructure.Database\Infrastructure.Database.csproj" />
     <ProjectReference Include="..\News.Service\News.Service.csproj" />
+    <ProjectReference Include="..\Messaging.Service\Messaging.Service.csproj" />
   </ItemGroup>
 
   <Import Project="..\Shared\Shared.projitems" Label="Shared" />

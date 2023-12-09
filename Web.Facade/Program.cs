@@ -2,11 +2,20 @@
 
 namespace Web.Facade
 {
+    using Messaging.Service;
+    using Microsoft.Extensions.Hosting;
+    using News.Service;
+
     public class Program
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+
+            var menuNewsMessagingReceiver = host.Services.GetRequiredService<IMenuNewsMessagingReceiver>();
+            menuNewsMessagingReceiver.Subscribe();
+
+            host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args)
