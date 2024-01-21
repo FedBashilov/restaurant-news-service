@@ -5,6 +5,7 @@ namespace News.Service.Extentions
     using News.Service;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
+    using News.Service.Interfaces;
 
     public static class ServicesExtentions
     {

@@ -5,14 +5,14 @@ namespace Web.Facade.Controllers
     using System.ComponentModel.DataAnnotations;
     using System.Diagnostics.CodeAnalysis;
     using Infrastructure.Auth.Constants;
+    using Infrastructure.Core.Exceptions;
     using Infrastructure.Core.Models;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
-    using News.Service;
-    using News.Service.Exceptions;
+    using News.Service.Interfaces;
     using News.Service.Models.DTOs;
-    using News.Service.Models.Responses;
+    using Web.Facade.Models.Responses;
 
     [Route("api/v1/news")]
     public class NewsController : ControllerBase

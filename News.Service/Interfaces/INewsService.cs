@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Fedor Bashilov. All rights reserved.
 
-namespace News.Service
+namespace News.Service.Interfaces
 {
     using Infrastructure.Core.Models;
     using News.Service.Models.DTOs;

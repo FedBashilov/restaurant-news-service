@@ -2,15 +2,16 @@
 
 namespace Messaging.Service.Extentions
 {
+    using Messaging.Service.Interfaces;
+    using Messaging.Service.Settings;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.DependencyInjection.Extensions;
-    using News.Service;
-    using RabbitMQ.Client;
 
     public static class ServicesExtentions
     {
-        public static void AddMessagingServices(this IServiceCollection services)
+        public static void AddMessagingServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.Configure<RabbitMqSettings>(configuration.GetSection("RabbitMqSettings"));
             services.AddSingleton<IMenuNewsMessagingReceiver, MenuNewsMessagingReceiver>();
         }
     }

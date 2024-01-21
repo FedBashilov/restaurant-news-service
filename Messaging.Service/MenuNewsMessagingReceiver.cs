@@ -2,8 +2,12 @@
 
 namespace Messaging.Service
 {
+    using Messaging.Service.Interfaces;
     using Messaging.Service.Models;
-    using News.Service;
+    using Messaging.Service.Settings;
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
+    using News.Service.Interfaces;
     using News.Service.Models.DTOs;
     using RabbitMQ.Client;
     using RabbitMQ.Client.Events;
@@ -13,38 +17,59 @@ namespace Messaging.Service
     public class MenuNewsMessagingReceiver : IMenuNewsMessagingReceiver
     {
         private readonly INewsService newsService;
+        private readonly RabbitMqSettings rbMqSettings;
+        private readonly ILogger<MenuNewsMessagingReceiver> logger;
 
-        public MenuNewsMessagingReceiver(INewsService newsService)
+        public MenuNewsMessagingReceiver(
+            INewsService newsService,
+            IOptions<RabbitMqSettings> rbMqSettings,
+            ILogger<MenuNewsMessagingReceiver> logger)
         {
             this.newsService = newsService;
+            this.rbMqSettings = rbMqSettings.Value;
+            this.logger = logger;
         }
 
         public void Subscribe()
         {
-            var factory = new ConnectionFactory { HostName = "localhost" };
-            var connection = factory.CreateConnection();
-            var channel = connection.CreateModel();
-
-            channel.QueueBind("menu_to_news_queue", "menu_to_news_exchange", "");
-
-            var consumer = new EventingBasicConsumer(channel);
-            consumer.Received += async (model, ea) =>
+            var factory = new ConnectionFactory
             {
-                var body = ea.Body.ToArray();
-                var message = Encoding.UTF8.GetString(body);
-                var menuItem = JsonSerializer.Deserialize<MenuItem>(message);
+                HostName = this.rbMqSettings.HostName,
+                UserName = this.rbMqSettings.UserName,
+                Password = this.rbMqSettings.UserPassword,
+                Port = this.rbMqSettings.HostPort,
+            };
 
-                var newsItemDto = new NewsItemDTO()
+            try
+            {
+                var connection = factory.CreateConnection();
+                var channel = connection.CreateModel();
+
+                channel.QueueBind(this.rbMqSettings.QueueName, this.rbMqSettings.ExchangeName, "");
+
+                var consumer = new EventingBasicConsumer(channel);
+                consumer.Received += async (model, ea) =>
                 {
-                    Title = $"New on the menu! Try {menuItem?.Name}",
-                    Description = $"Here you can try the new delicious {menuItem?.Name} for only {menuItem?.Price}!",
-                    Visible = true
+                    var body = ea.Body.ToArray();
+                    var message = Encoding.UTF8.GetString(body);
+                    var menuItem = JsonSerializer.Deserialize<MenuItem>(message);
+
+                    var newsItemDto = new NewsItemDTO()
+                    {
+                        Title = $"New on the menu! Try {menuItem?.Name}",
+                        Description = $"Here you can try the new delicious {menuItem?.Name} for only {menuItem?.Price}!",
+                        Visible = true
+                    };
+
+                    await this.newsService.CreateNewsItem(newsItemDto);
                 };
 
-
-                await this.newsService.CreateNewsItem(newsItemDto);
-            };
-            channel.BasicConsume("menu_to_news_queue", true, consumer);
+                channel.BasicConsume(this.rbMqSettings.QueueName, true, consumer);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError("RabbitMQ operation failed!" + e.Message);
+            }
         }
     }
 }

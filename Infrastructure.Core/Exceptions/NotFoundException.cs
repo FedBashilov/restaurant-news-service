@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Fedor Bashilov. All rights reserved.
 
-namespace News.Service.Exceptions
+namespace Infrastructure.Core.Exceptions
 {
     public class NotFoundException : Exception
     {

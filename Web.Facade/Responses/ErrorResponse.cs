@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Fedor Bashilov. All rights reserved.
 
-namespace News.Service.Models.Responses
+namespace Web.Facade.Models.Responses
 {
     public class ErrorResponse
     {

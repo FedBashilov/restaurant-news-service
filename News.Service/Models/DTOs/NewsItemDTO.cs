@@ -4,13 +4,13 @@ namespace News.Service.Models.DTOs
 {
     using System.ComponentModel.DataAnnotations;
 
-    public class NewsItemDTO
+    public record NewsItemDTO
     {
         [Required(ErrorMessage = "The Title param is required")]
-        public string? Title { get; set; }
+        public string? Title { get; init; }
 
-        public string Description { get; set; } = string.Empty;
+        public string Description { get; init; } = string.Empty;
 
-        public bool Visible { get; set; } = true;
+        public bool Visible { get; init; } = true;
     }
 }

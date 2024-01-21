@@ -2,9 +2,8 @@
 
 namespace Web.Facade
 {
-    using Messaging.Service;
+    using Messaging.Service.Interfaces;
     using Microsoft.Extensions.Hosting;
-    using News.Service;
 
     public class Program
     {

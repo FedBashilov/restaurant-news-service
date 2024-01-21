@@ -3,10 +3,11 @@
 namespace News.Service
 {
     using System.Linq;
+    using Infrastructure.Core.Exceptions;
     using Infrastructure.Core.Models;
     using Infrastructure.Database;
     using Microsoft.EntityFrameworkCore;
-    using News.Service.Exceptions;
+    using News.Service.Interfaces;
     using News.Service.Models.DTOs;
 
     public class NewsService : INewsService

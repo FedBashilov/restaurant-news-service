@@ -2,14 +2,14 @@
 
 namespace Messaging.Service.Models
 {
-    public class MenuItem
+    public record MenuItem
     {
-        public int Id { get; set; }
+        public int Id { get; init; }
 
-        public string? Name { get; set; }
+        public string? Name { get; init; }
 
-        public int Price { get; set; }
+        public int Price { get; init; }
 
-        public bool Visible { get; set; } = true;
+        public bool Visible { get; init; } = true;
     }
 }
